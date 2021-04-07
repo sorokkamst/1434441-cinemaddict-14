@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Иван Ломов](https://up.htmlacademy.ru/ecmascript/14/user/1434441).
-* Наставник: `Неизвестно`.
+* Наставник: [Михаил Полюбай](https://up.htmlacademy.ru/ecmascript/14/user/1342307).
 
 ---
 
