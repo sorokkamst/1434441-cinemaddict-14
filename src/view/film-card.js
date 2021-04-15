@@ -1,19 +1,31 @@
-export const createFilmCardTemplate = () => {
+import { getDate, isTrue } from '../mock/util.js';
+
+export const createFilmCardTemplate = (mockMovie) => {
+  const { title, rating, info, poster, descriprion, user_details } = mockMovie;
+  const { date, duration, genre } = info;
+  const { watchlist, watched, favorite } = user_details;
+
+  const activElement = 'film-card__controls-item--active';
+
+  const isAddedToWatchlist = isTrue(watchlist, activElement);
+  const isWatched = isTrue(watched, activElement);
+  const isFavorite = isTrue(favorite, activElement);
+
   return `<article class="film-card">
-  <h3 class="film-card__title">The Man with the Golden Arm</h3>
-  <p class="film-card__rating">9.0</p>
+  <h3 class="film-card__title">${title}</h3>
+  <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">1955</span>
-    <span class="film-card__duration">1h 59m</span>
-    <span class="film-card__genre">Drama</span>
+    <span class="film-card__year">${getDate(true, date)}</span>
+    <span class="film-card__duration">${duration}</span>
+    <span class="film-card__genre">${genre}</span>
   </p>
-  <img src="./images/posters/the-man-with-the-golden-arm.jpg" alt="" class="film-card__poster">
-  <p class="film-card__description">Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…</p>
-  <a class="film-card__comments">18 comments</a>
+  <img src="${poster}" alt="" class="film-card__poster">
+  <p class="film-card__description">${descriprion}</p>
+  <a class="film-card__comments">6 comments</a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched}" type="button">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite}" type="button">Mark as favorite</button>
   </div>
 </article>`;
 };
