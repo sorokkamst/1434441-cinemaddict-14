@@ -27,7 +27,6 @@ import {
 const FILMS_COUNT = 15;
 const FILMS_COUNT_PER_STEP = 5;
 const COMMENTS_COUNT = 5;
-const FILM_COUNT = 5;
 const EXTRA_FILM_COUNTER = 2;
 
 const mockMovies = new Array(FILMS_COUNT).fill().map(getMovieInfo);

@@ -1,7 +1,7 @@
 import { getDate, isTrue } from '../mock/util.js';
 
 export const createFilmCardTemplate = (mockMovie) => {
-  const { title, rating, info, poster, descriprion, comments, user_details } = mockMovie;
+  const { title, rating, info, poster, descriprion, user_details } = mockMovie;
   const { date, duration, genre } = info;
   const { watchlist, watched, favorite } = user_details;
 
@@ -25,9 +25,7 @@ export const createFilmCardTemplate = (mockMovie) => {
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist}" type="button">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched}" type="button">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite ${isAddedToWatchlist}" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite}" type="button">Mark as favorite</button>
   </div>
 </article>`;
 };
-
-
