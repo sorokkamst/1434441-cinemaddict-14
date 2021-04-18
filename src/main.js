@@ -1,21 +1,16 @@
 import {
-  createProfileRatingTemplate
-} from './view/profile-rating.js';
-import {
-  createSiteMenuTemplate
-} from './view/site-menu.js';
-import {
-  createSortTemplate
-} from './view/sort.js';
-import {
-  createFilmCardTemplate
-} from './view/film-card.js';
-import {
-  createShowMoreButtonTemplate
-} from './view/show-more-button.js';
-import {
-  createFilmInfoTemplate
-} from './view/film-info.js';
+  renderElement,
+  RenderPosition
+} from './mock/util.js';
+
+import ProfileRatingView from './view/profile-rating.js';
+import SiteMenuView from './view/site-menu.js';
+import SiteMenuSortView from './view/sort.js';
+import FiltersView from './view/film-filters.js';
+import FilmCardView from './view/film-card.js';
+import ShowMoreButtomView from './view/show-more-button.js';
+import FilmInfoPopupView from './view/film-info.js';
+
 import {
   getMovieInfo,
   getMovieComment
@@ -33,30 +28,30 @@ const mockMovies = new Array(FILMS_COUNT).fill().map(getMovieInfo);
 const filterFilms = generateFilter(mockMovies);
 const mockComments = new Array(COMMENTS_COUNT).fill().map(getMovieComment);
 
-const render = (container, template, place = 'beforeend') => {
-  container.insertAdjacentHTML(place, template);
-};
-
+const siteBodyElement = document.querySelector('.body');
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer');
 
+const popup = new FilmInfoPopupView(mockMovies[0], mockComments).getElement();
+
 // Рейтинг пользователя
-render(siteHeaderElement, createProfileRatingTemplate(filterFilms));
+renderElement(siteHeaderElement, new ProfileRatingView(filterFilms).getElement(), RenderPosition.BEFOREEND);
 // Меню и сортировка фильмов
-render(siteMainElement, createSiteMenuTemplate(filterFilms));
-render(siteMainElement, createSortTemplate());
+renderElement(siteMainElement, new SiteMenuView(filterFilms).getElement(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new SiteMenuSortView().getElement(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new FiltersView().getElement(), RenderPosition.BEFOREEND);
 
 const siteFilmListSection = document.querySelector('.films-list .films-list__container');
 const siteExtraFilmSections = document.querySelectorAll('.films-list--extra .films-list__container');
 
 for (let i = 0; i < Math.min(mockMovies.length, FILMS_COUNT_PER_STEP); i++) {
-  siteFilmListSection.insertAdjacentHTML('beforeend', createFilmCardTemplate(mockMovies[i]));
+  renderElement(siteFilmListSection, new FilmCardView(mockMovies[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 siteExtraFilmSections.forEach((element) => {
   for (let i = 0; i < EXTRA_FILM_COUNTER; i++) {
-    element.insertAdjacentHTML('beforeend', createFilmCardTemplate(mockMovies[i]));
+    renderElement(element, new FilmCardView(mockMovies[i]).getElement(), RenderPosition.BEFOREEND);
   }
 });
 
@@ -64,14 +59,14 @@ siteExtraFilmSections.forEach((element) => {
 if (mockMovies.length > FILMS_COUNT_PER_STEP) {
   let renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
-  render(siteFilmListSection, createShowMoreButtonTemplate(), 'afterend');
+  renderElement(siteFilmListSection, new ShowMoreButtomView().getElement(), RenderPosition.AFTEREND);
 
   const loadMoreButton = siteMainElement.querySelector('.films-list__show-more');
   loadMoreButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     mockMovies
       .slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP)
-      .forEach((film) => render(siteFilmListSection, createFilmCardTemplate(film)));
+      .forEach((film) => renderElement(siteFilmListSection, new FilmCardView(film).getElement(), RenderPosition.BEFOREEND));
 
     renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
@@ -81,5 +76,12 @@ if (mockMovies.length > FILMS_COUNT_PER_STEP) {
   });
 }
 
+export const renderPopup = () => {
 
-render(siteFooterElement, createFilmInfoTemplate(mockMovies[0], mockComments), 'afterend');
+  const closeButtom = popup.querySelector('.film-details__close-btn');
+  closeButtom.addEventListener('click', () => {
+    siteBodyElement.removeChild(popup);
+  });
+
+  renderElement(siteFooterElement, popup, RenderPosition.AFTEREND);
+};

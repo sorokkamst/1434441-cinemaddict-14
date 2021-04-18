@@ -1,6 +1,8 @@
-import { getDate, isTrue } from '../mock/util.js';
+import { getDate, isTrue, createElement } from '../mock/util.js';
 
-export const createFilmCardTemplate = (mockMovie) => {
+import { renderPopup } from '../main.js';
+
+const createFilmCardTemplate = (mockMovie) => {
   const { title, rating, info, poster, descriprion, user_details } = mockMovie;
   const { date, duration, genre } = info;
   const { watchlist, watched, favorite } = user_details;
@@ -29,3 +31,36 @@ export const createFilmCardTemplate = (mockMovie) => {
   </div>
 </article>`;
 };
+
+export default class FilmCard {
+  constructor(movies) {
+    this._element = null;
+    this._movie = movies;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._movie);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    const getClickListener = (element) => {
+      return this._element.querySelector(element).addEventListener('click', () => {
+        renderPopup();
+      });
+    };
+
+    getClickListener('.film-card__title');
+    getClickListener('.film-card__poster');
+    getClickListener('.film-card__comments');
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

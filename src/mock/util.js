@@ -8,6 +8,32 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
+const RenderPosition = {
+  AFTEREND: 'afterend',
+  BEFOREEND: 'beforeend',
+};
+
+const renderTemplate = (container, template, place = 'beforeend') => {
+  container.insertAdjacentHTML(place, template);
+};
+
+const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTEREND:
+      container.after(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
 const getRandomDemical = (lower, upper) => {
   return (Math.random() * (upper - lower)).toFixed(1);
 };
@@ -24,11 +50,14 @@ const getDate = (isShort, date) => {
 
 const isAny = (param, length) => { return param.length !== length ? param.join(', ') : param;};
 const getFieldName = (param, length, name) => { return param.length !== length ? name+'s' : name;};
-
 const isTrue = (param, text) => { return param ? text : '';};
 
 export {
   getRandomIndex,
+  renderTemplate,
+  renderElement,
+  createElement,
+  RenderPosition,
   getRandomDemical,
   getRandomInteger,
   getDate,

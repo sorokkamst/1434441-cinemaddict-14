@@ -1,5 +1,4 @@
-import { getDate } from '../mock/util.js';
-import { isAny, getFieldName, getRandomInteger } from '../mock/util.js';
+import { getDate, isAny, getFieldName, getRandomInteger, createElement } from '../mock/util.js';
 
 const ARRAY_LENGTH = 1;
 const WRITER_FIELD_NAME = 'Writer';
@@ -9,7 +8,7 @@ const COUNTRY_FIELD_NAME = 'Country';
 const COUNTRIES_FIELD_NAME = 'Countries';
 
 
-export const createFilmInfoTemplate = (mockMovie, mockComments) => {
+const createFilmInfoTemplate = (mockMovie, mockComments) => {
   const getRandomLength = getRandomInteger(0, mockComments.length);
 
   const { title, full_title, rating, info, poster, popup, user_details } = mockMovie;
@@ -57,8 +56,7 @@ export const createFilmInfoTemplate = (mockMovie, mockComments) => {
     return comments;
   };
 
-
-  return `<section class="film-details visually-hidden">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -167,3 +165,27 @@ export const createFilmInfoTemplate = (mockMovie, mockComments) => {
   </form>
 </section>`;
 };
+export default class FilmInfoPopup {
+  constructor (movie, cooments) {
+    this._element = null;
+    this._movie = movie;
+    this._cooments = cooments;
+  }
+
+  getTemplate() {
+    return createFilmInfoTemplate(this._movie, this._cooments);
+  }
+
+  getElement() {
+    if(!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+}
