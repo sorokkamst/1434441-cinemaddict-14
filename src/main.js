@@ -1,6 +1,8 @@
 import {
   renderElement,
-  RenderPosition
+  RenderPosition,
+  getRandomInteger,
+  isEscEvent
 } from './mock/util.js';
 
 import ProfileRatingView from './view/profile-rating.js';
@@ -33,25 +35,51 @@ const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer');
 
-const popup = new FilmInfoPopupView(mockMovies[0], mockComments).getElement();
+const renderPopup = () => {
+  const popup = new FilmInfoPopupView(mockMovies[getRandomInteger(0, FILMS_COUNT)], mockComments).getElement();
+  const closeButtom = popup.querySelector('.film-details__close-btn');
 
-// Рейтинг пользователя
-renderElement(siteHeaderElement, new ProfileRatingView(filterFilms).getElement(), RenderPosition.BEFOREEND);
-// Меню и сортировка фильмов
-renderElement(siteMainElement, new SiteMenuView(filterFilms).getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new SiteMenuSortView().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new FiltersView().getElement(), RenderPosition.BEFOREEND);
+  closeButtom.addEventListener('click', () => {
+    siteBodyElement.removeChild(popup);
+  });
+
+  renderElement(siteFooterElement, popup, RenderPosition.AFTEREND);
+};
+
+const addOpenPopupListener = (component, element) => {
+  component.getElement().querySelector(element).addEventListener('click', () => {
+    renderPopup();
+  });
+};
+
+// Рендерит фильмы, включая extra, добавляет обработчики событий
+const renderMovieCard = (moviesContainer, movie) => {
+  const movieComponent = new FilmCardView(movie);
+
+  addOpenPopupListener(movieComponent, '.film-card__title');
+  addOpenPopupListener(movieComponent, '.film-card__poster');
+  addOpenPopupListener(movieComponent, '.film-card__comments');
+
+  renderElement(moviesContainer, movieComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+renderElement(siteHeaderElement, new ProfileRatingView(filterFilms).getElement(), RenderPosition.BEFOREEND); // Рейтинг пользователя
+renderElement(siteMainElement, new SiteMenuView(filterFilms).getElement(), RenderPosition.BEFOREEND); // Меню и сортировка фильмов
+renderElement(siteMainElement, new SiteMenuSortView().getElement(), RenderPosition.BEFOREEND); // Меню и сортировка фильмов
+renderElement(siteMainElement, new FiltersView().getElement(), RenderPosition.BEFOREEND); // Меню и сортировка фильмов
 
 const siteFilmListSection = document.querySelector('.films-list .films-list__container');
 const siteExtraFilmSections = document.querySelectorAll('.films-list--extra .films-list__container');
 
+// Рендер фильмов без extra
 for (let i = 0; i < Math.min(mockMovies.length, FILMS_COUNT_PER_STEP); i++) {
-  renderElement(siteFilmListSection, new FilmCardView(mockMovies[i]).getElement(), RenderPosition.BEFOREEND);
+  renderMovieCard(siteFilmListSection, mockMovies[i]);
 }
 
+// Рендер фильмов extra
 siteExtraFilmSections.forEach((element) => {
   for (let i = 0; i < EXTRA_FILM_COUNTER; i++) {
-    renderElement(element, new FilmCardView(mockMovies[i]).getElement(), RenderPosition.BEFOREEND);
+    renderMovieCard(element, mockMovies[i]);
   }
 });
 
@@ -75,13 +103,3 @@ if (mockMovies.length > FILMS_COUNT_PER_STEP) {
     }
   });
 }
-
-export const renderPopup = () => {
-
-  const closeButtom = popup.querySelector('.film-details__close-btn');
-  closeButtom.addEventListener('click', () => {
-    siteBodyElement.removeChild(popup);
-  });
-
-  renderElement(siteFooterElement, popup, RenderPosition.AFTEREND);
-};
