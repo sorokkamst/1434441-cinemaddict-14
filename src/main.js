@@ -1,8 +1,7 @@
 import {
   renderElement,
   RenderPosition,
-  getRandomInteger,
-  isEscEvent
+  getRandomInteger
 } from './mock/util.js';
 
 import ProfileRatingView from './view/profile-rating.js';
