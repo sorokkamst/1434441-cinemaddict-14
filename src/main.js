@@ -1,7 +1,6 @@
 import {
   renderElement,
-  RenderPosition,
-  getRandomInteger
+  RenderPosition
 } from './mock/util.js';
 
 import ProfileRatingView from './view/profile-rating.js';
@@ -34,20 +33,11 @@ const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer');
 
-const renderPopup = () => {
-  const popup = new FilmInfoPopupView(mockMovies[getRandomInteger(0, FILMS_COUNT)], mockComments).getElement();
-  const closeButtom = popup.querySelector('.film-details__close-btn');
-
-  closeButtom.addEventListener('click', () => {
-    siteBodyElement.removeChild(popup);
-  });
-
-  renderElement(siteFooterElement, popup, RenderPosition.AFTEREND);
-};
-
 const addOpenPopupListener = (component, element) => {
-  component.getElement().querySelector(element).addEventListener('click', () => {
-    renderPopup();
+  component.getElement().querySelector(element).addEventListener('click', (evt) => {
+    const movieId = evt.target.closest('.film-card').id;
+    const movieIndex = mockMovies.findIndex((x) => x.id === movieId);
+    renderPopup(movieIndex);
   });
 };
 
@@ -81,6 +71,18 @@ siteExtraFilmSections.forEach((element) => {
     renderMovieCard(element, mockMovies[i]);
   }
 });
+
+const renderPopup = (movieIndex) => {
+
+  const popup = new FilmInfoPopupView(mockMovies[movieIndex], mockComments).getElement();
+  const closeButtom = popup.querySelector('.film-details__close-btn');
+
+  closeButtom.addEventListener('click', () => {
+    siteBodyElement.removeChild(popup);
+  });
+
+  renderElement(siteFooterElement, popup, RenderPosition.AFTEREND);
+};
 
 // Отрисовка кнопки show more
 if (mockMovies.length > FILMS_COUNT_PER_STEP) {

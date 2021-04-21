@@ -1,7 +1,7 @@
 import { getDate, isTrue, createElement } from '../mock/util.js';
 
 const createFilmCardTemplate = (mockMovie) => {
-  const { title, rating, info, poster, descriprion, user_details } = mockMovie;
+  const { id, title, rating, info, poster, descriprion, user_details } = mockMovie;
   const { date, duration, genre } = info;
   const { watchlist, watched, favorite } = user_details;
 
@@ -11,7 +11,7 @@ const createFilmCardTemplate = (mockMovie) => {
   const isWatched = isTrue(watched, activElement);
   const isFavorite = isTrue(favorite, activElement);
 
-  return `<article class="film-card">
+  return `<article class="film-card" id="${id}">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
@@ -29,7 +29,6 @@ const createFilmCardTemplate = (mockMovie) => {
   </div>
 </article>`;
 };
-
 export default class FilmCard {
   constructor(movies) {
     this._element = null;

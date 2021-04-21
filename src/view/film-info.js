@@ -7,11 +7,10 @@ const GENRE_FIELD_NAME = 'Genre';
 const COUNTRY_FIELD_NAME = 'Country';
 const COUNTRIES_FIELD_NAME = 'Countries';
 
-
 const createFilmInfoTemplate = (mockMovie, mockComments) => {
   const getRandomLength = getRandomInteger(0, mockComments.length);
 
-  const { title, full_title, rating, info, poster, popup, user_details } = mockMovie;
+  const { id, title, full_title, rating, info, poster, popup, user_details } = mockMovie;
   const { date, duration } = info;
   const { director, writers, actors, country, genres, full_description, age_rating } = popup;
 

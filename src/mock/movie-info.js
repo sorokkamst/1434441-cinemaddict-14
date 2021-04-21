@@ -1,7 +1,9 @@
 import {
   getRandomIndex,
   getRandomDemical,
-  getRandomInteger
+  getRandomInteger,
+  getRandomArray,
+  ID_PARTS
 } from './util.js';
 
 const MIN_RATING = 0;
@@ -126,6 +128,7 @@ const getMovieInfo = () => {
   const movieDescriprion = getRandomIndex(movieMockInfo.movieDescriprion);
 
   return {
+    id: getRandomArray(ID_PARTS),
     title: title,
     full_title: movieMockInfo.movieFullTitles[title],
     rating: getRandomDemical(MIN_RATING, MAX_RATING),
